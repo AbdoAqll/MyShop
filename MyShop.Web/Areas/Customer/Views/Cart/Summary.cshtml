@@ -1,0 +1,124 @@
+﻿@model ShoppingCartVM
+@using Microsoft.Extensions.Options
+@inject IOptions<MyShop.Utilities.StripeData> Stripe
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shopping Cart</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+    <link href="~/css/summary.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="snippet-body">
+    <div class="wrapper">
+        <div class="h5 large">Billing Address</div>
+        <form method="post" asp-area="Customer" asp-controller="Cart" asp-action="Summary">
+            <div class="row">
+                <!-- Billing Address Card -->
+                <div class="col-lg-6 col-md-8 col-sm-10 offset-lg-0 offset-md-2 offset-sm-1">
+                    <div class="card bg-white rounded pb-5">
+                        <div class="card-header">
+                            <div class="h5">Billing Address</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="text-muted">Name</label>
+                                <input type="text" name="OrderHeader.Name" value="@Model.OrderHeader.Name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="text-muted">Email</label>
+                                <input type="email" name="OrderHeader.ApplicationUser.Email" value="@Model.OrderHeader.ApplicationUser.Email" class="form-control" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" name="OrderHeader.City" value="@Model.OrderHeader.City" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="text" name="OrderHeader.PhoneNumber" value="@Model.OrderHeader.PhoneNumber" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" name="OrderHeader.Address" value="@Model.OrderHeader.Address" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Summary Card -->
+                <div class="col-lg-6 col-md-8 col-sm-10 offset-lg-0 offset-md-2 offset-sm-1 pt-lg-0 pt-3">
+                    <div class="card bg-white rounded">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="h6">Cart Summary</div>
+                                <div class="h6">
+                                    <a href="#">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @foreach (var cart in Model.CartsList)
+                            {
+                                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 border-bottom">
+                                    <div class="item pr-2">
+                                        <img src="@cart.Product.ImageUrl" alt="" width="80" height="80">
+                                        <div class="number">@cart.Count</div>
+                                    </div>
+                                    <div class="d-flex flex-column px-3">
+                                        <b class="h5">@cart.Product.Name</b>
+                                        <a href="#" class="h5 text-primary">C-@cart.Product.Id</a>
+                                    </div>
+                                    <div class="ml-auto">
+                                        <b class="h5">@($"{cart.Count * cart.Product.Price}")</b>
+                                    </div>
+                                </div>
+                            }
+
+                            @{
+                                decimal totalPrice = 0;
+                                foreach (var cart in Model.CartsList)
+                                {
+                                    totalPrice += cart.Count * cart.Product.Price;
+                                }
+                            }
+
+                            <div class="d-flex align-items-center py-2">
+                                <div class="display-5">Total</div>
+                                <div class="ml-auto d-flex">
+                                    <div class="text-primary text-uppercase px-3">usd</div>
+                                    <div class="font-weight-bold">$@totalPrice</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row pt-lg-3 pt-2 buttons mb-sm-0 mb-2">
+                        <div class="col-md-6 d-flex align-items-start">
+                            <a class="btn btn-outline-primary text-uppercase" asp-area="Customer" asp-controller="Home" asp-action="Index">Back to Shopping</a>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-end pt-md-0 pt-3">
+                            <button type="submit" class="btn btn-primary">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="text-muted">
+            <span class="fas fa-lock"></span>
+            Your information is safe
+        </div>
+    </div>
+</body>
+</html>

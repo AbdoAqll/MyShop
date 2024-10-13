@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    ViewBag.PageTitle = "Product Management";
+    ViewBag.CardTitle = "View Product";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+<div>
+    <a asp-action="Create" asp-controller="Product" asp-area="Admin" class="btn btn-primary">Create</a>
+</div>
+
+<br />
+<table id="mytable" class="table table-hover" width="100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    
+</table>
+
+@section Scripts{
+    <script src="~/js/products.js"></script>
+} 
